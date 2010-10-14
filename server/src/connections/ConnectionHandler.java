@@ -1,6 +1,5 @@
 package connections;
 
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -33,7 +32,7 @@ public class ConnectionHandler {
 			// get message from robocode blocking
 			event = ois.readObject();
 			// pass it to brain (and let it decide what to do)
-			brain.passEventToBrain(event);
+			goOn = brain.passEventToBrain(event);
 			// get list of actions, if null do nothing, else send'em back
 			actions = brain.receiveActionsFromBrain();
 			if(actions != null) {
