@@ -8,11 +8,23 @@ public class Main
 	/**
 	 * @param args
 	 */	
-	public static void main(String[] args) 
+	public static int main(String[] args) 
 	{
-		JessBrain b = new JessBrain();
-		Server s = new Server(b);
-		s.startServer();
+		JessBrain b;
+		Server s;
+		Boolean r = true;
+		try {
+			b = new JessBrain();
+			s = new Server(b);
+			s.startServer();
+		} catch (Exception e) {
+			e.printStackTrace();
+			r = false;
+		}
+		if (r==true)
+			return 0;
+		return -1;
 	}
 }
+
 

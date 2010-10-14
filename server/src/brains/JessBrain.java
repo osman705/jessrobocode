@@ -2,6 +2,8 @@ package brains;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+
 import commands.Command;
 import commands.Run;
 import events.Event;
@@ -10,82 +12,51 @@ import jess.*;
 
 public class JessBrain extends Brain {
 	Rete jessEngine;
-	WorkingMemoryMarker m;
+	WorkingMemoryMarker mark;	
 	ArrayList<Action> actions;
 	
-	public JessBrain()
+	public JessBrain() throws JessException
 	{	
-		actions = null;
-		try 
-		{
-			jessEngine = new Rete();
-			jessEngine.reset();
-			jessEngine.batch("rules.clp");						
-			m = jessEngine.mark();
-		} 
-		catch (JessException e) 
-		{
-			e.printStackTrace();
-		}
+		actions = new ArrayList<Action>();
+		jessEngine = new Rete();
+		jessEngine.reset();
+		jessEngine.batch("rules.clp");						
+		mark = jessEngine.mark();
+	}	
+
+	@SuppressWarnings("unchecked")
+	private void getResult(){
+		Iterator<Action> it;
+	
+		it = jessEngine.getObjects(new Filter.ByClass(Ahead.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(Back.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(Fire.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(Scan.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(TurnGunLeft.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(TurnGunRight.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(TurnLeft.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(TurnRight.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(TurnRadarLeft.class));
+		add(actions, it);
+		it = jessEngine.getObjects(new Filter.ByClass(TurnRadarRight.class));
+		add(actions, it);
 	}
 	
-//	public ArrayList<Object> think(ArrayList<Object> inputs){
-//		ArrayList<Object> actions = null;
-//		try {			
-//			for(Object o: inputs){
-//			//	if(o.getClass().equals(Status.class))
-//			//		((Status) o).setName(currentStatus);
-//				jessEngine.add(o);
-//			}
-//			jessEngine.run();			
-//			actions = getResult();
-//			//jessEngine.watchAll();
-//			jessEngine.reset();			
-//			
-//		} catch (JessException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		return actions;
-//	}
-
-//	private ArrayList<Object> getResult(){
-//		ArrayList<Object> actions = new ArrayList<Object>();
-//		Iterator<Object> it;
-//		
-//		it = jessEngine.getObjects(new Filter.ByClass(Ahead.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(Back.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(Fire.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(Scan.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(TurnGunLeft.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(TurnGunRight.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(TurnLeft.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(TurnRight.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(TurnRadarLeft.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(TurnRadarRight.class));
-//		add(actions, it);
-//		it = jessEngine.getObjects(new Filter.ByClass(Status.class));
-//		if(it != null && it.hasNext())
-//			currentStatus = ((Status) it.next()).getName();	
-//		return actions;
-//	}
-	
-//	private void add(ArrayList<Object> list, Iterator it)
-//	{
-//		while(it != null && it.hasNext())
-//		{
-//			list.add(it.next());
-//		}	
-//	}
+	private void add(ArrayList<Action> list, Iterator<Action> it)
+	{
+		while(it != null && it.hasNext())
+		{
+			list.add(it.next());
+		}	
+	}
 
 	@Override
 	public boolean passEventToBrain(Object event) {
@@ -106,6 +77,7 @@ public class JessBrain extends Brain {
 
 	@Override
 	public ArrayList<Action> receiveActionsFromBrain() {
+		// it is possible to do some kind of processing here (?)
 		return actions;
 	}
 	
@@ -118,24 +90,15 @@ public class JessBrain extends Brain {
 				// blocking
 				jessEngine.run();
 				// retrieve facts
-				for (@SuppressWarnings("unchecked")
-				Iterator<Fact> itr = jessEngine.listFacts(); itr.hasNext(); ) {
-					Fact f = itr.next();
-					System.out.println("Letto "+f.getName());
-					if (f.getName().equals("MAIN::ahead")) {
-						System.out.println("Accodato "+f.getName());
-					}
-					else if (f.getName().equals("MAIN::fire")) {
-					  	System.out.println("Accodato "+f.getName());
-					}
-				}
+				getResult();
 			} catch (JessException e) {
 				e.printStackTrace();
 				goOn = false;
 				return goOn;
 			}
 		}
-		// if this point has been reached, no valid command was passed; stop server
+		// if this point has been reached, no valid command was passed; 
+		// stop server
 		return false;
 	}
 }

@@ -9,7 +9,7 @@
 (deftemplate HitRobot (declare (from-class HitRobot)))
 (deftemplate HitWall (declare (from-class HitWall)))
 (deftemplate RoundEnd (declare (from-class RoundEnd)))
-(deftemplate ScannedRobotEvent (declare (from-class ScannedRobotEvent)))
+(deftemplate ScannedRobot (declare (from-class ScannedRobot)))
 (deftemplate Status (declare (from-class Status)))
 (deftemplate Win (declare (from-class Win)))
 ;;Actions
@@ -27,9 +27,9 @@
 
 ;For Testing
 (defrule fire
-	(ScannedRobotEvent)
+	(ScannedRobot)
 	=>
-    (add (new Fire 1)))
+    (add (new Fire 1.0)))
 
 ;While searching for enemy
 (defrule scanForEnemy
@@ -51,7 +51,7 @@
 (defrule pointAndShoot
     "if you see him point to him and shoot"
     (Status (name ?name&:(= ?name tracking)))
-    (ScannedRobotEvent (bearing ?bears) (distance ?dist))   
+    (ScannedRobot (bearing ?bears) (distance ?dist))   
     =>
     (add (new Fire 1))
     (add (new TurnRight ?bears))
@@ -83,7 +83,7 @@
 ;Common behaviours
 (defrule distanceBasedFireEfficiency
 	"modify fire value to save energy based on distance"
-    (ScannedRobotEvent (distance ?dist&:(> ?dist 10)))
+    (ScannedRobot (distance ?dist&:(> ?dist 10)))
     ?f <-(Fire (power ?pow&:(< ?pow 3)))
     (test (and (< ?pow 3) (> ?pow 0.5)))
 	=>
