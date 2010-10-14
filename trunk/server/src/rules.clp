@@ -29,7 +29,7 @@
 (defrule fire
 	(ScannedRobot)
 	=>
-    (add (new Fire 1.0)))
+	(add (new Fire 1.0)))
 
 ;While searching for enemy
 (defrule scanForEnemy
