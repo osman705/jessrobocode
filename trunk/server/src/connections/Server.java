@@ -17,9 +17,9 @@ public class Server
 		s = new ServerSocket(p);	
 	}
 
-	public boolean startServer() throws IOException {
-		System.out.println("server up and running on port " + 
-						    String.valueOf(p) + ". Waiting for a client...");
+	public boolean startServer() throws Exception {
+		System.out.println("Server up and running on port " + 
+						       String.valueOf(p) + ". Waiting for a client...");
 		Socket socket;
 		socket = s.accept();
 		System.out.println("Incoming connection - accepted.");
