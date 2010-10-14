@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import brains.Brain;
 import actions.Action;
 
-
-
 public class ConnectionHandler {
 	private Socket socket;
 	ObjectInputStream ois;
@@ -29,7 +27,7 @@ public class ConnectionHandler {
 		}
 	}
 
-	public void handleConnection() {
+	public boolean handleConnection() {
 		Object event;
 		boolean goOn = true;
 		ArrayList<Action> actions;
@@ -42,7 +40,9 @@ public class ConnectionHandler {
 				// get list of actions, if null do nothing else send'em back
 				actions = brain.receiveActionsFromBrain();
 				if(actions != null) {
+					oos.reset();
 					oos.writeObject(actions);
+					oos.flush();
 				}
 			}while(goOn);			
 			// release resources
@@ -52,5 +52,6 @@ public class ConnectionHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return true;
 	}
 }

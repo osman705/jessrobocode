@@ -5,38 +5,26 @@ import java.net.ServerSocket;
 import java.net.Socket;	
 import brains.Brain;
 
-public class Server 
+public class Server
 {
-	private ServerSocket server;
-	private int port = 7777;
-	private ConnectionHandler hand;
-	private Brain brain;
+	private ServerSocket s;
+	private ConnectionHandler h;
+	private Brain b;
+	private int p = 7777;
 	
-	public Server(Brain b) 
-	{
-		brain = b;
-		try 
-		{
-			server = new ServerSocket(port);
-		} 
-		catch (Exception e) 
-		{
-			e.printStackTrace();
-		}		
+	public Server(Brain brain) throws IOException {
+		b = brain;
+		s = new ServerSocket(p);	
 	}
 
-	
-	public void startServer() {
-		System.out.println("server up and running on port " + String.valueOf(port) + ". Waiting for a client...");
+	public boolean startServer() throws IOException {
+		System.out.println("server up and running on port " + 
+						    String.valueOf(p) + ". Waiting for a client...");
 		Socket socket;
-		try {
-			socket = server.accept();
-			System.out.println("incoming connection!");
-			hand = new ConnectionHandler(socket, brain);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		hand.handleConnection();
+		socket = s.accept();
+		System.out.println("Incoming connection - accepted.");
+		h = new ConnectionHandler(socket, b);
+		return h.handleConnection();
 	}
 }
 	
