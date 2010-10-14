@@ -1,6 +1,9 @@
 package actions;
 
-public class Ahead {
+import java.io.Serializable;
+
+public class Ahead extends Action implements Serializable {
+	private static final long serialVersionUID = -8417110387555894805L;
 	double distance;
 
 	public Ahead(double distance) {
