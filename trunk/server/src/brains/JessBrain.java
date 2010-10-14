@@ -50,8 +50,9 @@ public class JessBrain extends Brain {
 				getResult();
 		}
 		// if this point has been reached, no valid command was passed; 
-		// stop server
-		return true;
+		// stop server throwing an exception
+		throw new CommandNotFoundException("command was not recognized." +
+				"class is: " + event.getClass().toString());
 	}
 	
 	@SuppressWarnings("unchecked")
