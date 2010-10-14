@@ -44,15 +44,21 @@ public class JessBrain extends Brain {
 	private boolean executeCommand(Object event) throws Exception {
 		// run the reasoning process
 		if (event.getClass().equals(Run.class)) {
-				// blocking
-				jessEngine.run();
-				// retrieve facts
-				getResult();
+			// blocking
+			jessEngine.run();
+			// retrieve facts
+			getResult();
+			return true;
 		}
-		// if this point has been reached, no valid command was passed; 
-		// stop server throwing an exception
-		throw new CommandNotFoundException("command was not recognized." +
-				"class is: " + event.getClass().toString());
+		else if (event.getClass().equals(EndServer.class)) {
+			return false;
+		}
+		else {
+			// if this point has been reached, no valid command was passed; 
+			// stop server throwing an exception
+			throw new CommandNotFoundException("command was not recognized." +
+					"class is: " + event.getClass().toString());
+		}
 	}
 	
 	@SuppressWarnings("unchecked")
