@@ -8,7 +8,7 @@ public class BrainServer
 	/**
 	 * @param args
 	 */	
-	public static int main(String[] args) 
+	public static void main(String[] args) 
 	{
 		JessBrain b;
 		Server s;
@@ -16,14 +16,16 @@ public class BrainServer
 		try {
 			b = new JessBrain();
 			s = new Server(b);
-			s.startServer();
+			r = s.startServer();
 		} catch (Exception e) {
 			e.printStackTrace();
 			r = false;
 		}
 		if (r==true)
-			return 0;
-		return -1;
+			System.out.println("Server closed - job done :)");
+		else
+			System.out.println("Server closed unexpectedly.");
+		return;
 	}
 }
 

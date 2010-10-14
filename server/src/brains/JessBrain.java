@@ -3,10 +3,8 @@ package brains;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-
-import commands.Command;
-import commands.Run;
-import events.Event;
+import commands.*;
+import events.*;
 import actions.*;
 import jess.*;
 
@@ -15,7 +13,7 @@ public class JessBrain extends Brain {
 	WorkingMemoryMarker mark;	
 	ArrayList<Action> actions;
 	
-	public JessBrain() throws JessException
+	public JessBrain() throws Exception
 	{	
 		actions = new ArrayList<Action>();
 		jessEngine = new Rete();
@@ -23,7 +21,30 @@ public class JessBrain extends Brain {
 		jessEngine.batch("rules.clp");						
 		mark = jessEngine.mark();
 	}	
+	
+	@Override
+	public boolean passEventToBrain(Object event) {
+		// if event is a command then execute it
+		if (event.getClass().getSuperclass().equals(Command.class)) {
+			return executeCommand(event);
+		} 
+		// else if it is an event add it to working memory
+		else if (event.getClass().getSuperclass().equals(Event.class)) {
+			try {
+				jessEngine.add(event);
+			} catch (JessException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;
+	}
 
+	@Override
+	public ArrayList<Action> receiveActionsFromBrain() {
+		// it is possible to do some kind of processing here (?)
+		return actions;
+	}
+	
 	@SuppressWarnings("unchecked")
 	private void getResult(){
 		Iterator<Action> it;
@@ -58,28 +79,6 @@ public class JessBrain extends Brain {
 		}	
 	}
 
-	@Override
-	public boolean passEventToBrain(Object event) {
-		// if event is a command then execute it
-		// else if it is an event add it to working memory
-		if (event.getClass().getSuperclass().equals(Command.class)) {
-			return executeCommand(event);
-		} else if (event.getClass().getSuperclass().equals(Event.class)){
-			try {
-				jessEngine.add(event);
-			} catch (JessException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		return false;
-	}
-
-	@Override
-	public ArrayList<Action> receiveActionsFromBrain() {
-		// it is possible to do some kind of processing here (?)
-		return actions;
-	}
 	
 	private boolean executeCommand(Object event) {
 		// go on with reasoning or stop
