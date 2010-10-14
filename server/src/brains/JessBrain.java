@@ -23,18 +23,14 @@ public class JessBrain extends Brain {
 	}	
 	
 	@Override
-	public boolean passEventToBrain(Object event) {
+	public boolean passEventToBrain(Object event) throws Exception {
 		// if event is a command then execute it
 		if (event.getClass().getSuperclass().equals(Command.class)) {
 			return executeCommand(event);
 		} 
 		// else if it is an event add it to working memory
 		else if (event.getClass().getSuperclass().equals(Event.class)) {
-			try {
-				jessEngine.add(event);
-			} catch (JessException e) {
-				e.printStackTrace();
-			}
+			jessEngine.add(event);
 		}
 		return false;
 	}
@@ -45,10 +41,22 @@ public class JessBrain extends Brain {
 		return actions;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void getResult(){
-		Iterator<Action> it;
+	private boolean executeCommand(Object event) throws Exception {
+		// run the reasoning process
+		if (event.getClass().equals(Run.class)) {
+				// blocking
+				jessEngine.run();
+				// retrieve facts
+				getResult();
+		}
+		// if this point has been reached, no valid command was passed; 
+		// stop server
+		return true;
+	}
 	
+	@SuppressWarnings("unchecked")
+	private void getResult() {
+		Iterator<Action> it;
 		it = jessEngine.getObjects(new Filter.ByClass(Ahead.class));
 		add(actions, it);
 		it = jessEngine.getObjects(new Filter.ByClass(Back.class));
@@ -71,33 +79,9 @@ public class JessBrain extends Brain {
 		add(actions, it);
 	}
 	
-	private void add(ArrayList<Action> list, Iterator<Action> it)
-	{
-		while(it != null && it.hasNext())
-		{
+	private void add(ArrayList<Action> list, Iterator<Action> it) {
+		while(it != null && it.hasNext()) {
 			list.add(it.next());
 		}	
-	}
-
-	
-	private boolean executeCommand(Object event) {
-		// go on with reasoning or stop
-		boolean goOn = true;
-		// run the reasoning process
-		if (event.getClass().equals(Run.class)) {
-			try {
-				// blocking
-				jessEngine.run();
-				// retrieve facts
-				getResult();
-			} catch (JessException e) {
-				e.printStackTrace();
-				goOn = false;
-				return goOn;
-			}
-		}
-		// if this point has been reached, no valid command was passed; 
-		// stop server
-		return false;
 	}
 }
