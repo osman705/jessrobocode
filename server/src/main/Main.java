@@ -11,8 +11,8 @@ public class Main
 	public static void main(String[] args) 
 	{
 		JessBrain b = new JessBrain();
-		Server serv = new Server(b);
-		serv.getHand().handleConnection();
+		Server s = new Server(b);
+		s.startServer();
 	}
 }
 
