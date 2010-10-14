@@ -2,8 +2,8 @@ package actions;
 
 import java.io.Serializable;
 
-public class TurnGunLeft extends Action implements Serializable {
-	private static final long serialVersionUID = 2813080769399759975L;
+public class TurnGunRight extends Action implements Serializable {
+	private static final long serialVersionUID = -2822988311637433392L;
 	double degree;
 
 	public double getDegree() {
@@ -14,7 +14,7 @@ public class TurnGunLeft extends Action implements Serializable {
 		this.degree = degree;
 	}
 
-	public TurnGunLeft(double degree) {
+	public TurnGunRight(double degree) {
 		super();
 		this.degree = degree;
 	}
