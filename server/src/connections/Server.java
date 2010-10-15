@@ -26,5 +26,14 @@ public class Server
 		h = new ConnectionHandler(socket, b);
 		return h.handleConnection();
 	}
+
+	public void stopServer() {
+		h.closeConnection();
+		try {
+			s.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 }
 	

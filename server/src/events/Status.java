@@ -7,7 +7,6 @@ public class Status extends Event implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 9101198214889855141L;
-	String name;
 	double energy;
 	double gunHeading;
 	double gunHeat;
@@ -17,11 +16,10 @@ public class Status extends Event implements Serializable {
 	double velocity;
 	double x;
 	double y;
-	public Status(String name, double energy, double gunHeading, double gunHeat,
+	public Status(double energy, double gunHeading, double gunHeat,
 			double heading, double radarHeading, int others, double velocity,
 			double x, double y) {
 		super();
-		this.name = name;
 		this.energy = energy;
 		this.gunHeading = gunHeading;
 		this.gunHeat = gunHeat;
@@ -33,12 +31,6 @@ public class Status extends Event implements Serializable {
 		this.y = y;
 	}
 	
-	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
-	}
 	public double getEnergy() {
 		return energy;
 	}
