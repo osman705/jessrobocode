@@ -27,7 +27,7 @@ public class JessBrain extends Brain {
 		// if event is a command then execute it
 		if (event.getClass().getSuperclass().equals(Command.class)) {
 			return executeCommand(event);
-		} 
+		}
 		// else if it is an event add it to working memory
 		else if (event.getClass().getSuperclass().equals(Event.class)) {
 			jessEngine.add(event);

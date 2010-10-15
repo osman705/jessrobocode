@@ -4,7 +4,7 @@
 (deftemplate BulletHit (declare (from-class BulletHit)))
 (deftemplate BulletHitBullet (declare (from-class BulletHitBullet)))
 (deftemplate BulletMissed (declare (from-class BulletMissed)))
-(deftemplate Death (declare (from-class DeathEvent)))
+(deftemplate Death (declare (from-class Death)))
 (deftemplate HitByBullet (declare (from-class HitByBullet)))
 (deftemplate HitRobot (declare (from-class HitRobot)))
 (deftemplate HitWall (declare (from-class HitWall)))

@@ -2,7 +2,7 @@ package events;
 
 import java.io.Serializable;
 
-public class DeathEvent extends Event implements Serializable {
+public class Death extends Event implements Serializable {
 
 	/**
 	 * 

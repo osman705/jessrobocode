@@ -29,11 +29,6 @@ public class Server
 
 	public void stopServer() {
 		h.closeConnection();
-		try {
-			s.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }
 	
