@@ -34,27 +34,21 @@ public class Robojess extends AdvancedRobot {
 			return;
 		}
 		
-//		setTurnRadarRightRadians(Double.POSITIVE_INFINITY);
-		scan();
+		// run loop
 		while(true) {
+			// Get actions
 			try {
+				// let the brain think what to do
 				oos.writeObject(new commands.Run());
+				// receive  what to do
 				actions = (ArrayList<Action>) ois.readObject();
 			} catch (Exception e) {
 				e.printStackTrace();
 				return;
-			}							
-			// Parse the actions and add to the execution queue
-			for (itr = actions.iterator(); itr.hasNext(); ) {
-				Action action = itr.next();
-				if (action.getClass().equals(Ahead.class)) {
-				    setAhead(((Ahead) action).getDistance());
-				} else if (action.getClass().equals(Fire.class)) {
-				    setFire(((Fire) action).getPower());
-				}
 			}
-			
-			// Execute
+			// Parse the actions and add to the execution queue
+			parse();		
+			// Execute actions
 			execute();			
 		}
 	}
@@ -68,7 +62,18 @@ public class Robojess extends AdvancedRobot {
 	    oos.flush();		    
 	    ois = new ObjectInputStream(socket.getInputStream());		
 	}
-
+	
+	private void parse() {
+		for (itr = actions.iterator(); itr.hasNext(); ) {
+			Action action = itr.next();
+			if (action.getClass().equals(Ahead.class)) {
+			    setAhead(((Ahead) action).getDistance());
+			} else if (action.getClass().equals(Fire.class)) {
+			    setFire(((Fire) action).getPower());
+			}
+		}	
+	}
+	
 	public void onScannedRobot(ScannedRobotEvent e) {
 		ScannedRobot event = new ScannedRobot(e.getBearing(), e.getDistance(), 
 				e.getEnergy(), e.getHeading(), e.getName(), e.getVelocity());	
@@ -80,5 +85,7 @@ public class Robojess extends AdvancedRobot {
 		}
 	}
 	
-	
+	public void onHÊ
+		
+	}
 }
