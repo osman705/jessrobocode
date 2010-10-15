@@ -3,9 +3,6 @@ package events;
 import java.io.Serializable;
 
 public class Status extends Event implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 9101198214889855141L;
 	double energy;
 	double gunHeading;
@@ -16,6 +13,7 @@ public class Status extends Event implements Serializable {
 	double velocity;
 	double x;
 	double y;
+	
 	public Status(double energy, double gunHeading, double gunHeat,
 			double heading, double radarHeading, int others, double velocity,
 			double x, double y) {

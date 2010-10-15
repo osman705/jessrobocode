@@ -3,14 +3,12 @@ package events;
 import java.io.Serializable;
 
 public class HitRobot extends Event implements Serializable{
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -2855337385836411174L;
 	double bearing;
 	double energy;
 	String name;
 	boolean isMyFault;
+	
 	public double getBearing() {
 		return bearing;
 	}

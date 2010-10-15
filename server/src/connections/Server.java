@@ -27,8 +27,5 @@ public class Server
 		return h.handleConnection();
 	}
 
-	public void stopServer() {
-		h.closeConnection();
-	}
 }
 	

@@ -18,7 +18,6 @@ public class BrainServer
 				b = new JessBrain();
 				s = new Server(b);
 				r = s.startServer(); // blocking
-				s.stopServer();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

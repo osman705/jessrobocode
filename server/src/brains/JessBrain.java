@@ -10,29 +10,35 @@ import jess.*;
 
 public class JessBrain extends Brain {
 	Rete jessEngine;
-	WorkingMemoryMarker mark;	
 	ArrayList<Action> actions;
 	
-	public JessBrain() throws Exception
-	{	
+	public JessBrain() throws Exception {	
 		actions = new ArrayList<Action>();
 		jessEngine = new Rete();
 		jessEngine.reset();
-		jessEngine.batch("rules.clp");						
-		mark = jessEngine.mark();
+		jessEngine.watchAll();
+		jessEngine.batch("robojess.clp");				
 	}	
 	
 	@Override
 	public boolean passEventToBrain(Object event) throws Exception {
 		// if event is a command then execute it
-		if (event.getClass().getSuperclass().equals(Command.class)) {
+		if (event.getClass().getSuperclass().equals(commands.Command.class)) {
 			return executeCommand(event);
 		}
 		// else if it is an event add it to working memory
-		else if (event.getClass().getSuperclass().equals(Event.class)) {
+		else if (event.getClass().getSuperclass().equals(events.Event.class)) {
 			jessEngine.add(event);
+			return true;
 		}
-		return false;
+		// else it has not recognized, throw exception
+		else {
+			// if this point has been reached, no valid event was passed; 
+			// stop server throwing an exception
+			System.out.println("received an unrecognized event. panic!");
+			throw new EventNotRecognizedExcpetion("event was not recognized." +
+								 	"class is: " + event.getClass().toString());
+		}
 	}
 
 	@Override
@@ -44,25 +50,38 @@ public class JessBrain extends Brain {
 	private boolean executeCommand(Object event) throws Exception {
 		// run the reasoning process
 		if (event.getClass().equals(Run.class)) {
+			System.out.println("received a run command. running reasoning...");
 			// blocking
 			jessEngine.run();
+			System.out.println("finished.");
 			// retrieve facts
-			getResult();
+			getResults();
+			// reset the engine for next turn
+			jessEngine.reset();
 			return true;
-		}
+		} 
+		// stop the server
 		else if (event.getClass().equals(EndServer.class)) {
+			System.out.println("received an end command. stopping server.");
 			return false;
+		}
+		// activate watch all in jess
+		else if (event.getClass().equals(WatchAll.class)) {
+			System.out.println("received a watch all command.");
+			jessEngine.watchAll();
+			return true;
 		}
 		else {
 			// if this point has been reached, no valid command was passed; 
 			// stop server throwing an exception
+			System.out.println("received an unrecognized command. panic!");
 			throw new CommandNotFoundException("command was not recognized." +
-					"class is: " + event.getClass().toString());
+									"class is: " + event.getClass().toString());
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void getResult() {
+	private void getResults() {
 		Iterator<Action> it;
 		it = jessEngine.getObjects(new Filter.ByClass(Ahead.class));
 		add(actions, it);
