@@ -4,18 +4,18 @@ import java.io.Serializable;
 
 public class TurnRight extends Action implements Serializable {
 	private static final long serialVersionUID = 2248916969763347596L;
-	double degree;
+	double radians;
 
-	public double getDegree() {
-		return degree;
+	public double getDistance() {
+		return radians;
 	}
 
-	public void setDegree(double degree) {
-		this.degree = degree;
+	public void setDistance(double radians) {
+		this.radians = radians;
 	}
 
-	public TurnRight(double degree) {
+	public TurnRight(double radians) {
 		super();
-		this.degree = degree;
+		this.radians = radians;
 	}
 }

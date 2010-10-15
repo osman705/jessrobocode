@@ -14,14 +14,17 @@ public class BrainServer
 		Server s;
 		Boolean r = true;
 		try {
-			b = new JessBrain();
-			s = new Server(b);
-			r = s.startServer();
+			while(true) {
+				b = new JessBrain();
+				s = new Server(b);
+				r = s.startServer(); // blocking
+				s.stopServer();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			r = false;
 		}
-		if (r==true)
+		if (r == true)
 			System.out.println("Server closed - job done :)");
 		else
 			System.out.println("Server closed unexpectedly.");

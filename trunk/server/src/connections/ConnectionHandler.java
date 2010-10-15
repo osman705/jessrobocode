@@ -1,5 +1,6 @@
 package connections;
 
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -50,5 +51,18 @@ public class ConnectionHandler {
 		oos.close();
 		socket.close();
 		return true;
+	}
+
+	public void closeConnection() {
+		try {
+			ois.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
