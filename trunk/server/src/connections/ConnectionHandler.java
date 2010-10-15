@@ -29,7 +29,7 @@ public class ConnectionHandler {
 		Object event;
 		boolean goOn = true;
 		ArrayList<Action> actions;
-		do{
+		do {
 			// get message from robocode blocking
 			event = ois.readObject();
 			// pass it to brain (and let it decide what to do)
@@ -45,11 +45,9 @@ public class ConnectionHandler {
 				oos.writeObject(actions);
 				oos.flush();
 			}
-		}while(goOn);
+		} while(goOn);
 		// release resources
-		ois.close();
-		oos.close();
-		socket.close();
+		closeConnection();
 		return true;
 	}
 
@@ -61,6 +59,11 @@ public class ConnectionHandler {
 		}
 		try {
 			oos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
