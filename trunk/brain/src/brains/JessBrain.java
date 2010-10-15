@@ -11,13 +11,15 @@ import jess.*;
 public class JessBrain extends Brain {
 	Rete jessEngine;
 	ArrayList<Action> actions;
+	WorkingMemoryMarker mark;
 	
 	public JessBrain() throws Exception {	
 		actions = new ArrayList<Action>();
 		jessEngine = new Rete();
 		jessEngine.reset();
 		jessEngine.watchAll();
-		jessEngine.batch("robojess.clp");				
+		jessEngine.batch("pineiderJess.clp");	
+		mark = jessEngine.mark();
 	}	
 	
 	@Override
@@ -47,6 +49,7 @@ public class JessBrain extends Brain {
 		return actions;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private boolean executeCommand(Object event) throws Exception {
 		// run the reasoning process
 		if (event.getClass().equals(Run.class)) {
@@ -54,10 +57,19 @@ public class JessBrain extends Brain {
 			// blocking
 			jessEngine.run();
 			System.out.println("finished.");
+			for (Iterator<Fact>it = (Iterator<Fact>) jessEngine.listFacts(); it.hasNext();) {
+				Fact f = it.next();
+				System.out.println(f.getName());
+			}
 			// retrieve facts
 			getResults();
 			// reset the engine for next turn
-			jessEngine.reset();
+			//jessEngine.resetToMark(mark);
+			//jessEngine.reset();
+			for (Iterator<Fact>it = (Iterator<Fact>) jessEngine.listFacts(); it.hasNext();) {
+				Fact f = it.next();
+				System.out.println(f.getName());
+			}
 			return true;
 		} 
 		// stop the server
@@ -83,6 +95,9 @@ public class JessBrain extends Brain {
 	@SuppressWarnings("unchecked")
 	private void getResults() {
 		Iterator<Action> it;
+		// Clean the actions list
+		actions = new ArrayList<Action>();
+		
 		it = jessEngine.getObjects(new Filter.ByClass(Ahead.class));
 		add(actions, it);
 		it = jessEngine.getObjects(new Filter.ByClass(Back.class));
@@ -107,7 +122,9 @@ public class JessBrain extends Brain {
 	
 	private void add(ArrayList<Action> list, Iterator<Action> it) {
 		while(it != null && it.hasNext()) {
-			list.add(it.next());
+			Action a = it.next();
+			list.add(a);
 		}	
 	}
+
 }
